@@ -31,15 +31,16 @@ namespace HangFireDeep.Controllers
         }
         #endregion
 
-
+        #region Recurring Job
         [HttpPost]
         [Route("[action]")]
         public IActionResult DatabaseUpdate()
         {
-            var jobId = BackgroundJob.Enqueue(() => SendWellcomeEmail("Welcome to our App"));
+            RecurringJob.AddOrUpdate(() => Console.WriteLine("DatabaseUpdated"), Cron.Minutely);
 
-            return Ok($"JobId: {jobId}. Welcome email sent to user");
+            return Ok("Database Job initiated!");
         }
+        #endregion
 
         // Helper function
         [NonAction]
