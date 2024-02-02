@@ -17,6 +17,30 @@ namespace HangFireDeep.Controllers
             return Ok($"JobId: {jobId}. Welcome email sent to user");
         }
 
+
+        #endregion
+
+        #region Delayed Jobs
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult Discount()
+        {
+            var jobId = BackgroundJob.Schedule(() => SendWellcomeEmail("Welcome to our App"), TimeSpan.FromSeconds(30));
+
+            return Ok($"JobId: {jobId}. Discount email sent to user in 30s");
+        }
+        #endregion
+
+
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult DatabaseUpdate()
+        {
+            var jobId = BackgroundJob.Enqueue(() => SendWellcomeEmail("Welcome to our App"));
+
+            return Ok($"JobId: {jobId}. Welcome email sent to user");
+        }
+
         // Helper function
         [NonAction]
         public void SendWellcomeEmail(string text)
@@ -24,8 +48,5 @@ namespace HangFireDeep.Controllers
             Console.WriteLine(text);
             // Add your logic here to send a welcome email
         }
-        #endregion
-
-
     }
 }
