@@ -42,6 +42,19 @@ namespace HangFireDeep.Controllers
         }
         #endregion
 
+        #region Continuous Jobs
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult Confirm()
+        {
+            var parentJobId = BackgroundJob.Schedule(() => SendWellcomeEmail("Unsubscibe"), TimeSpan.FromSeconds(30));
+
+            BackgroundJob.ContinueJobWith(parentJobId, () => Console.WriteLine("U were unsubscribed"));
+
+            return Ok("Confirmation job created");
+        }
+        #endregion
+
         // Helper function
         [NonAction]
         public void SendWellcomeEmail(string text)
